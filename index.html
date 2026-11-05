@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SATTA SKY - Results Chart</title>
+<style>
+:root{--blue:#1769bd;--green:#237b3b;--bg:#f3f7fc;--ink:#243044}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+header{height:86px;background:linear-gradient(105deg,#1769bd 0%,#147f78 55%,#287b39 100%);display:flex;align-items:center;padding:12px 18px;gap:13px;color:white;box-shadow:0 3px 12px #102b4a22}
+.logo{width:52px;height:52px;border-radius:14px;background:#ffd329;display:grid;place-items:center;font-size:27px;box-shadow:0 3px 8px #0002}
+.brand{font-size:21px;font-weight:800;letter-spacing:.2px}.sub{font-size:11px;font-weight:700;color:#ffe98b;margin-top:3px;letter-spacing:.4px}
+.refresh{margin-left:auto;border:0;border-radius:12px;background:#ffffff26;color:white;font-size:22px;width:52px;height:44px;cursor:pointer}
+main{max-width:900px;margin:0 auto;padding:24px 15px 48px}
+.monthbar{height:54px;background:#fff;border:1px solid #e3e8ef;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:17px;font-weight:700;box-shadow:0 2px 5px #172b4d0a}
+.monthbar select{border:0;background:transparent;font-size:17px;font-weight:700;color:var(--ink);outline:none;max-width:190px}
+.updated{text-align:center;color:#9aa5b5;margin:17px 0 25px;font-size:14px}
+.legend{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.pill{border-radius:25px;padding:9px 16px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%}
+.ds{background:#dceaff;color:#1761a8}.ds .dot{background:#1769bd}
+.fr{background:#dcf8e9;color:#147a4b}.fr .dot{background:#16834e}
+.gz{background:#ffebd3;color:#a9570b}.gz .dot{background:#bd5d08}
+.ga{background:#efe2ff;color:#6235a5}.ga .dot{background:#673ab7}
+.banner{background:linear-gradient(105deg,#1769bd,#287b39);border-radius:17px;color:white;text-align:center;padding:18px 10px 15px;margin-bottom:20px;box-shadow:0 4px 9px #173d6a25}
+.banner strong{display:block;font-size:20px;letter-spacing:.3px}.banner span{display:block;color:#d8ee9c;font-size:14px;font-weight:700;margin-top:6px}
+.table-card{background:white;border-radius:18px;overflow:hidden;box-shadow:0 4px 14px #1c355015;border:1px solid #e7edf4}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;min-width:520px;border-collapse:separate;border-spacing:0;text-align:center}
+thead th{padding:17px 8px;font-size:12px;letter-spacing:.3px;border-bottom:3px solid}
+th.date{background:#fff4d9;color:#725d2b;border-color:#e8c56b}
+th.ds{background:#e5efff;color:#2365aa;border-color:#3d83d4}
+th.fr{background:#def8e9;color:#16784a;border-color:#39a875}
+th.gz{background:#ffebd5;color:#a45a12;border-color:#e59a43}
+th.ga{background:#efe4ff;color:#6539a3;border-color:#8b5bc5}
+tbody td{padding:11px 8px;border-bottom:1px solid #edf0f4;font-weight:700}
+tbody tr:last-child td{border-bottom:0}
+td.date{background:#fffaf0;color:#3c4656}
+td.ds{background:#f0f6ff;color:#2468ae}
+td.fr{background:#effbf4;color:#16784a}
+td.gz{background:#fff6eb;color:#a45a12}
+td.ga{background:#f7f1ff;color:#6539a3}
+.day{display:block;font-size:14px}.dow{display:block;font-size:9px;color:#9aa3af;margin-top:3px;font-weight:600}
+.sun .day,.sun .dow{color:#cf4a4a}
+.value{display:inline-block;min-width:30px;padding:5px 7px;border-radius:8px;border:1px solid currentColor;background:#ffffff80;box-shadow:0 1px 2px #0000000b}
+.empty{color:#c5cbd3;font-weight:400}
+.note{text-align:center;color:#98a2b2;font-size:13px;margin:22px 4px 0;line-height:1.5}
+footer{text-align:center;color:#98a2b2;font-size:13px;padding:20px 10px 8px}
+@media(max-width:520px){main{padding:24px 15px 36px}.banner strong{font-size:19px}.monthbar{height:54px}.table-card{border-radius:17px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🌤️</div>
+  <div><div class="brand">SATTA SKY</div><div class="sub">RESULTS CHART</div></div>
+  <button class="refresh" onclick="render()" aria-label="Refresh">⟳</button>
+</header>
+<main>
+  <div class="monthbar">▦ <select id="monthSelect" aria-label="Choose month"></select></div>
+  <div class="updated" id="updated">Monthly results</div>
+  <div class="legend">
+    <div class="pill ds"><i class="dot"></i>DSWR</div>
+    <div class="pill fr"><i class="dot"></i>FRBD</div>
+    <div class="pill gz"><i class="dot"></i>GZBD</div>
+    <div class="pill ga"><i class="dot"></i>GALI</div>
+  </div>
+  <section class="banner"><strong>FULL MONTH RESULTS</strong><span id="monthLabel"></span></section>
+  <section class="table-card"><div class="table-scroll">
+    <table>
+      <thead><tr><th class="date">DATE</th><th class="ds">DSWR</th><th class="fr">FRBD</th><th class="gz">GZBD</th><th class="ga">GALI</th></tr></thead>
+      <tbody id="results"></tbody>
+    </table>
+  </div></section>
+  <p class="note">All dates of the selected month are listed. Only supplied result entries are filled; blank cells mean no result data has been added.</p>
+  <footer>SATTA SKY · Results are for informational purposes only.</footer>
+</main>
+<script>
+const names=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const select=document.getElementById('monthSelect');
+const now=new Date();
+const startYear=2025, endYear=2028;
+for(let y=endYear;y>=startYear;y--){for(let m=11;m>=0;m--){const o=document.createElement('option');o.value=`${y}-${m}`;o.textContent=`${names[m]} ${y}`;select.appendChild(o)}}
+select.value=`${now.getFullYear()}-${now.getMonth()}`;
+const data={
+ "2026-9":{
+  29:{ds:"38"},28:{ds:"02",fr:"09",gz:"40",ga:"17"},
+  27:{ds:"26",fr:"32",gz:"11",ga:"05"},
+  26:{ds:"49",fr:"23",gz:"07",ga:"01"},
+  25:{ds:"16",fr:"31",gz:"27",ga:"41"}
+ }
+};
+function render(){
+ const [year,month]=select.value.split('-').map(Number);
+ const count=new Date(year,month+1,0).getDate();
+ document.getElementById('monthLabel').textContent=`${names[month]} ${year}`;
+ document.getElementById('updated').textContent=`Showing all ${count} dates · ${names[month]} ${year}`;
+ const tbody=document.getElementById('results');tbody.innerHTML='';
+ const monthData=data[`${year}-${month}`]||{};
+ for(let day=count;day>=1;day--){
+  const date=new Date(year,month,day), dow=date.toLocaleDateString('en-US',{weekday:'short'}).toUpperCase();
+  const r=monthData[day]||{};
+  const tr=document.createElement('tr');if(dow==='SUN')tr.className='sun';
+  tr.innerHTML=`<td class="date"><span class="day">${String(day).padStart(2,'0')}</span><span class="dow">${dow}</span></td>
+  <td class="ds">${r.ds?`<span class="value">${r.ds}</span>`:'<span class="empty">—</span>'}</td>
+  <td class="fr">${r.fr?`<span class="value">${r.fr}</span>`:'<span class="empty">—</span>'}</td>
+  <td class="gz">${r.gz?`<span class="value">${r.gz}</span>`:'<span class="empty">—</span>'}</td>
+  <td class="ga">${r.ga?`<span class="value">${r.ga}</span>`:'<span class="empty">—</span>'}</td>`;
+  tbody.appendChild(tr);
+ }
+}
+select.addEventListener('change',render);render();
+</script>
+</body>
+</html>
